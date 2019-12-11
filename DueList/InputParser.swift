@@ -14,6 +14,7 @@ class InputParser {
     enum Invalid: String {
         case time = "Time"
         case month = "Date"
+        case year = "Year"
     }
     
     struct Output {
@@ -40,7 +41,7 @@ class InputParser {
         return longFormatMatches > 0 || shortFormMatch
     }
     
-    func makeDate(month: ParsableMonth? = nil, dayOfMonth: Int? = nil, day: Day? = nil, timeText: String) -> (DateInRegion?, Invalid?) {
+    func makeDate(month: ParsableMonth? = nil, dayOfMonth: Int? = nil, day: Day? = nil, timeText: String, year: Int? = nil) -> (DateInRegion?, Invalid?) {
         
         let currentDate = Date().in(region: Region.current)
         var date = currentDate
@@ -52,18 +53,46 @@ class InputParser {
         
         date = newDate
         
+        let extendedYear: Int?
+        if let year = year, year < 100 {
+            let currentYear = date.year
+            let shortYear = currentYear % 1000
+            let modifiedYear = currentYear - shortYear + year
+            if modifiedYear >= currentYear {
+                extendedYear = modifiedYear
+            }
+            else {
+                extendedYear = nil
+            }
+        }
+        else {
+            extendedYear = year
+        }
+        
         if let month = month {
+            let monthValue = month.monthValue
+            let monthInt = monthValue.rawValue + 1
+            var dateComponents: [Calendar.Component: Int?] = [.month: monthInt, .day: dayOfMonth]
+            if let year = extendedYear {
+                dateComponents[.year] = year
+            }
             guard let dayOfMonth = dayOfMonth,
                 dayOfMonth > 0,
-                dayOfMonth <= month.monthValue.numberOfDays(year: date.year),
-                let newDate = date.dateBySet([.month: month.monthValue.rawValue + 1, .day: dayOfMonth]) else {
+                let newDate = date.dateBySet(dateComponents) else {
                 return (nil, .month)
             }
             
             date = newDate
             
             if date.isBeforeDate(currentDate, orEqual: true, granularity: .minute) {
+                if extendedYear != nil {
+                    return (nil, .year)
+                }
                 date = date.dateByAdding(1, .year)
+            }
+            
+            guard monthInt == date.month, dayOfMonth <= month.monthValue.numberOfDays(year: date.year) else {
+                return (nil, .month)
             }
         }
         else if let day = day {
@@ -120,6 +149,11 @@ class InputParser {
         return nil
     }
     
+    func isSlashedDate(text: String) -> Bool {
+        let matches = text.numberOfMatches(pattern: #"\/[\d]"#)
+        return matches > 0 && matches < 3
+    }
+    
     func parse(text: String) -> Output {
         let tokens = text.split(separator: " ")
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -129,6 +163,7 @@ class InputParser {
         var month: ParsableMonth? = nil
         var monthIndex: Int? = nil
         var dayOfMonth: Int? = nil
+        var year: Int? = nil
         var days = [Day]()
         var times = [String]()
         
@@ -138,8 +173,23 @@ class InputParser {
                 monthIndex = index
             }
             else if let monthIndex = monthIndex, index == monthIndex + 1, dayOfMonth == nil {
-                if let day = Int(token) {
+                if let day = Int(token.replace(pattern: #","#, with: "")) {
                     dayOfMonth = day
+                }
+            }
+            else if let monthIndex = monthIndex, index == monthIndex + 2, dayOfMonth != nil {
+                if token.count == 4 {
+                    year = Int(token)
+                }
+            }
+            else if isSlashedDate(text: token) {
+                let components = token.split(separator: "/").compactMap { Int($0) }
+                if components.count > 1 {
+                    month = ParsableMonth(month: components[0])
+                    dayOfMonth = components[1]
+                    if components.count > 2 {
+                        year = components[2]
+                    }
                 }
             }
             else if let day = InputParser.dayStrings[token.lowercased()] {
@@ -170,7 +220,7 @@ class InputParser {
         let invalid: Invalid?
         
         if let month = month, let time = time {
-            (date, invalid) = makeDate(month: month, dayOfMonth: dayOfMonth, timeText: time)
+            (date, invalid) = makeDate(month: month, dayOfMonth: dayOfMonth, timeText: time, year: year)
         }
         else if let day = day, let time = time {
             (date, invalid) = makeDate(day: day, timeText: time)
@@ -196,6 +246,13 @@ class InputParser {
         case october
         case november
         case december
+        
+        init?(month: Int) {
+            if month < 1 || month > 12 {
+                return nil
+            }
+            self = ParsableMonth.allCases[month - 1]
+        }
         
         var monthValue: Month {
             switch self {

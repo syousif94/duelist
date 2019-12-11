@@ -13,6 +13,7 @@
 		535D6DD32399C983008DC139 /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535D6DD22399C983008DC139 /* InputViewController.swift */; };
 		535D6DD72399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535D6DD62399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift */; };
 		537A6CD1239B1850004ED09E /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537A6CD0239B1850004ED09E /* FilterButton.swift */; };
+		538F717523A0E77000B8E7CC /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F717423A0E77000B8E7CC /* NavigationController.swift */; };
 		53C6406F239983C6000E9995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C6406E239983C6000E9995 /* AppDelegate.swift */; };
 		53C64071239983C6000E9995 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C64070239983C6000E9995 /* SceneDelegate.swift */; };
 		53C64073239983C6000E9995 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C64072239983C6000E9995 /* RootViewController.swift */; };
@@ -56,6 +57,7 @@
 		535D6DD22399C983008DC139 /* InputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		535D6DD62399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETCollectionViewWaterFallLayout.swift; sourceTree = "<group>"; };
 		537A6CD0239B1850004ED09E /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		538F717423A0E77000B8E7CC /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		53C6406B239983C6000E9995 /* DueList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DueList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53C6406E239983C6000E9995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		53C64070239983C6000E9995 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				53C6406E239983C6000E9995 /* AppDelegate.swift */,
 				53C64070239983C6000E9995 /* SceneDelegate.swift */,
 				53C64072239983C6000E9995 /* RootViewController.swift */,
+				538F717423A0E77000B8E7CC /* NavigationController.swift */,
 				530FACE9239CFD300094ABDA /* DueItems.swift */,
 				535D6DD22399C983008DC139 /* InputViewController.swift */,
 				53218C28239F58B700CF4191 /* InputParser.swift */,
@@ -452,6 +455,7 @@
 				537A6CD1239B1850004ED09E /* FilterButton.swift in Sources */,
 				53218C29239F58B700CF4191 /* InputParser.swift in Sources */,
 				53D48035239A0DD1009A2039 /* Extensions.swift in Sources */,
+				538F717523A0E77000B8E7CC /* NavigationController.swift in Sources */,
 				535D6DD32399C983008DC139 /* InputViewController.swift in Sources */,
 				53C6406F239983C6000E9995 /* AppDelegate.swift in Sources */,
 				53CCA895239D039E007A7D9E /* DueItem+CoreDataProperties.swift in Sources */,

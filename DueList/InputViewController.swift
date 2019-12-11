@@ -78,7 +78,7 @@ class InputViewController: UIViewController, UITextFieldDelegate {
         
         let output = inputParser.parse(text: text)
         
-        if output.invalid != nil {
+        if output.invalid != nil || output.title.isEmpty {
             return
         }
         
@@ -131,7 +131,10 @@ class InputViewController: UIViewController, UITextFieldDelegate {
                 self.timeLabel.textColor = .red
             }
             else if let date = output.date {
-                let text = "\(date.toFormat("MMM d")) \(date.toFormat("h:mm"))\(date.toFormat("a").lowercased())"
+                let yearText = date.year != Date().in(region: Region.current).year
+                    ? ", \(date.year) "
+                    : " "
+                let text = "\(date.toFormat("MMM d"))\(yearText)\(date.toFormat("h:mm"))\(date.toFormat("a").lowercased())"
                 self.timeLabel.text = text
                 self.timeLabel.textColor = .green
             }
