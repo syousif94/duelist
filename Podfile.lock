@@ -1,0 +1,42 @@
+PODS:
+  - DeepDiff (2.3.1)
+  - PinLayout (1.8.13)
+  - RxCocoa (5.0.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.0.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.1)
+  - SwiftDate (5.1.0)
+  - UIColor_Hex_Swift (5.1.0)
+
+DEPENDENCIES:
+  - DeepDiff
+  - PinLayout
+  - RxCocoa (~> 5)
+  - RxSwift (~> 5)
+  - SwiftDate (~> 5.0)
+  - UIColor_Hex_Swift
+
+SPEC REPOS:
+  trunk:
+    - DeepDiff
+    - PinLayout
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SwiftDate
+    - UIColor_Hex_Swift
+
+SPEC CHECKSUMS:
+  DeepDiff: e5ae6c50d0321568e4508cec5930b9f10bb293fc
+  PinLayout: e41a50260a76508b7a7fcee8955c76639adc69bc
+  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
+  RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  SwiftDate: 6329e58969a2de31cea7f1ee1143b247693196e7
+  UIColor_Hex_Swift: 8be7432edacb7fa91c78aa05ef3c30b66e4f9415
+
+PODFILE CHECKSUM: 10f9ff3be002cd85c951b6d57ba3dc2b84a6105c
+
+COCOAPODS: 1.8.0
