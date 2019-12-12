@@ -93,14 +93,14 @@ class FilterButton: FadingButton {
         
         addTarget(self, action: #selector(onTap), for: .touchUpInside)
         
-        DueItems.shared.list.subscribe(onNext: { list in
+        appDelegate.dueItems.list.subscribe(onNext: { list in
             self.backgroundColor = list == self.mode ? UIColor.black.withAlphaComponent(0.07) : UIColor.black.withAlphaComponent(0.03)
         }).disposed(by: bag)
     }
     
     @objc func onTap() {
-        if DueItems.shared.list.value != self.mode {
-            DueItems.shared.list.accept(self.mode)
+        if appDelegate.dueItems.list.value != self.mode {
+            appDelegate.dueItems.list.accept(self.mode)
         }
     }
     

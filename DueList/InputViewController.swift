@@ -87,6 +87,7 @@ class InputViewController: UIViewController, UITextFieldDelegate {
         item.title = output.title
         item.input = output.raw
         item.dueDate = output.date?.date
+        item.createdAt = Date()
 
         do {
             try delegate.managedObjectContext.save()

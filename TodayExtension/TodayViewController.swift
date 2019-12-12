@@ -1,46 +1,61 @@
 //
-//  AppDelegate.swift
-//  DueList
+//  TodayViewController.swift
+//  TodayExtension
 //
-//  Created by Sammy Yousif on 12/5/19.
+//  Created by Sammy Yousif on 12/12/19.
 //  Copyright © 2019 Sammy Yousif. All rights reserved.
 //
 
 import UIKit
+import NotificationCenter
 import CoreData
 import PinLayout
-import UIColor_Hex_Swift
+import RxSwift
+import RxCocoa
 
-var appDelegate: AppDelegate {
-    return UIApplication.shared.delegate as! AppDelegate
-}
-
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class TodayViewController: UIViewController, NCWidgetProviding {
+    
+    let bag = DisposeBag()
     
     var dueItems: DueItems!
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    let label: UILabel = {
+        let label = UILabel()
+        return label
+    }()
         
-        dueItems = DueItems(viewContext: persistentContainer.viewContext)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        return true
+        view.addSubview(label)
+            
+        self.dueItems = DueItems(viewContext: persistentContainer.viewContext)
+        
+        dueItems.incomplete.results.subscribe(onNext: { [unowned self] items in
+            let text = "\(items.count) Incomplete"
+            DispatchQueue.main.async {
+                self.label.text = text
+                self.view.setNeedsLayout()
+            }
+        }).disposed(by: bag)
     }
-
-    // MARK: UISceneSession Lifecycle
-
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        label.pin.sizeToFit().center()
     }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+        
+    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
+        // Perform any setup necessary in order to update the view.
+        
+        // If an error is encountered, use NCUpdateResult.Failed
+        // If there's no update required, use NCUpdateResult.NoData
+        // If there's an update, use NCUpdateResult.NewData
+        
+        completionHandler(NCUpdateResult.newData)
     }
-
+    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: PersistentContainer = {
@@ -69,23 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
-
-    // MARK: - Core Data Saving support
-
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
-
+    
 }
 
 class PersistentContainer: NSPersistentCloudKitContainer {
@@ -97,4 +96,3 @@ class PersistentContainer: NSPersistentCloudKitContainer {
         super.init(name: name, managedObjectModel: model)
     }
 }
-

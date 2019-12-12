@@ -19,6 +19,10 @@ target 'DueList' do
     # Pods for testing
   end
 
+  target 'TodayExtension' do
+    inherit! :search_paths
+  end
+
   target 'DueListUITests' do
     # Pods for testing
   end

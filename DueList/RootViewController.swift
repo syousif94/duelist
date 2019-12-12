@@ -87,16 +87,16 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
         view.addGestureRecognizer(collectionView.panGestureRecognizer)
         
         Observable.combineLatest(
-            DueItems.shared.complete.results,
-            DueItems.shared.incomplete.results
+            appDelegate.dueItems.complete.results,
+            appDelegate.dueItems.incomplete.results
         ).subscribe(onNext: { [unowned self] _, _ in
             self.updateFilters()
         }).disposed(by: bag)
         
         Observable.combineLatest(
-            DueItems.shared.list,
-            DueItems.shared.complete.results,
-            DueItems.shared.incomplete.results
+            appDelegate.dueItems.list,
+            appDelegate.dueItems.complete.results,
+            appDelegate.dueItems.incomplete.results
         ).subscribe(onNext: { [unowned self] list, complete, incomplete in
             
             let newList: [DueItem]
@@ -133,7 +133,7 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
             })
         }).disposed(by: bag)
         
-        DueItems.shared.complete.results.subscribe(onNext: { [unowned self] list in
+        appDelegate.dueItems.complete.results.subscribe(onNext: { [unowned self] list in
             self.updateFilters()
         }).disposed(by: bag)
     }
@@ -191,13 +191,14 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
     }
     
     func updateFilters() {
+        guard let dueItems = appDelegate.dueItems else { return }
         DispatchQueue.global(qos: .userInteractive).async { [unowned self] in
-            let all = DueItems.shared.incomplete.results.value.count
-            let complete = DueItems.shared.complete.results.value.count
+            let all = dueItems.incomplete.results.value.count
+            let complete = dueItems.complete.results.value.count
             var today = 0
             var late = 0
             
-            for object in DueItems.shared.incomplete.results.value {
+            for object in dueItems.incomplete.results.value {
                 if let date = object.dueDate?.in(region: Region.current) {
                     if date.isInPast {
                         late += 1

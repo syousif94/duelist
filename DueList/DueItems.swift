@@ -13,21 +13,28 @@ import RxSwift
 import RxCocoa
 
 class DueItems {
-    static let shared = DueItems()
     
-    let incomplete = FetchController(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
-        ],
-        predicate: NSPredicate(format: "completed = %d", false)
-    )
+    let incomplete: FetchController
     
-    let complete = FetchController(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
-        ],
-        predicate: NSPredicate(format: "completed = %d", true)
-    )
+    let complete: FetchController
+    
+    init(viewContext: NSManagedObjectContext) {
+        incomplete = FetchController(
+            viewContext: viewContext,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
+            ],
+            predicate: NSPredicate(format: "completed = %d", false)
+        )
+        
+        complete = FetchController(
+            viewContext: viewContext,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
+            ],
+            predicate: NSPredicate(format: "completed = %d", true)
+        )
+    }
     
     let list = BehaviorRelay<List>(value: .all)
     
@@ -78,13 +85,11 @@ extension DueItems {
         
         let results = BehaviorRelay<[DueItem]>(value: [])
         
-        init(sortDescriptors: [NSSortDescriptor]?, predicate: NSPredicate?) {
+        init(viewContext: NSManagedObjectContext, sortDescriptors: [NSSortDescriptor]?, predicate: NSPredicate?) {
             self.sortDescriptors = sortDescriptors
             self.predicate = predicate
             
             super.init()
-            
-            let viewContext = appDelegate.persistentContainer.viewContext
             
             viewContext.automaticallyMergesChangesFromParent = true
             

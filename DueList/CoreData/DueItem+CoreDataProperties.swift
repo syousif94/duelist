@@ -21,5 +21,6 @@ extension DueItem {
     @NSManaged public var dueDate: Date?
     @NSManaged public var input: String?
     @NSManaged public var title: String?
-
+    @NSManaged public var createdAt: Date?
+    
 }
