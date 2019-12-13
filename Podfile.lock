@@ -1,5 +1,9 @@
 PODS:
   - DeepDiff (2.3.1)
+  - Disk (0.6.4)
+  - MMWormhole (2.0.0):
+    - MMWormhole/Core (= 2.0.0)
+  - MMWormhole/Core (2.0.0)
   - PinLayout (1.8.13)
   - RxCocoa (5.0.1):
     - RxRelay (~> 5)
@@ -12,6 +16,8 @@ PODS:
 
 DEPENDENCIES:
   - DeepDiff
+  - Disk
+  - MMWormhole (~> 2.0.0)
   - PinLayout
   - RxCocoa (~> 5)
   - RxSwift (~> 5)
@@ -21,6 +27,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - DeepDiff
+    - Disk
+    - MMWormhole
     - PinLayout
     - RxCocoa
     - RxRelay
@@ -30,6 +38,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   DeepDiff: e5ae6c50d0321568e4508cec5930b9f10bb293fc
+  Disk: dcee5c2e98fb72f9a924cde8da8435b08244a80e
+  MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
   PinLayout: e41a50260a76508b7a7fcee8955c76639adc69bc
   RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
   RxRelay: 89d54507f4fd4d969e6ec1d4bd7f3673640b4640
@@ -37,6 +47,6 @@ SPEC CHECKSUMS:
   SwiftDate: 6329e58969a2de31cea7f1ee1143b247693196e7
   UIColor_Hex_Swift: 8be7432edacb7fa91c78aa05ef3c30b66e4f9415
 
-PODFILE CHECKSUM: ec3fd2ee7e5469be0c460b73a89d45456b226762
+PODFILE CHECKSUM: 5dd842746e83a4989e1e6d3ce80558c63ecb0248
 
 COCOAPODS: 1.8.0

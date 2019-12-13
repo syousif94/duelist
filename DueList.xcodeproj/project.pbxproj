@@ -11,6 +11,10 @@
 		1A9006A9312A353A8B1A4F0B /* Pods_DueList_DueListUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57DED58E43F2A314FB07065C /* Pods_DueList_DueListUITests.framework */; };
 		530FACEA239CFD300094ABDA /* DueItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530FACE9239CFD300094ABDA /* DueItems.swift */; };
 		53218C29239F58B700CF4191 /* InputParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53218C28239F58B700CF4191 /* InputParser.swift */; };
+		53595A5623A2EDC100FB7944 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F5A1E82399B87800931C47 /* CloudKit.framework */; };
+		53595A5723A2F04100FB7944 /* ETCollectionViewWaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535D6DD62399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift */; };
+		53595A5823A2F09500FB7944 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D48032239A0D62009A2039 /* Views.swift */; };
+		53595A5923A2F09700FB7944 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D48034239A0DD1009A2039 /* Extensions.swift */; };
 		535D6DD32399C983008DC139 /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535D6DD22399C983008DC139 /* InputViewController.swift */; };
 		535D6DD72399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535D6DD62399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift */; };
 		536B632E23A23E7B00A427B1 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 536B632D23A23E7B00A427B1 /* NotificationCenter.framework */; };
@@ -18,9 +22,12 @@
 		536B633423A23E7B00A427B1 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 536B633223A23E7B00A427B1 /* MainInterface.storyboard */; };
 		536B633823A23E7B00A427B1 /* Incomplete.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 536B632C23A23E7B00A427B1 /* Incomplete.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		536B633D23A23F3600A427B1 /* DueList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 53C64077239983C6000E9995 /* DueList.xcdatamodeld */; };
-		536B634023A241C400A427B1 /* DueItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530FACE9239CFD300094ABDA /* DueItems.swift */; };
-		536B634223A248EA00A427B1 /* DueItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA893239D039E007A7D9E /* DueItem+CoreDataProperties.swift */; };
-		536B634323A248EC00A427B1 /* DueItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA892239D039E007A7D9E /* DueItem+CoreDataClass.swift */; };
+		5374637223A3561600EE08EC /* TodayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374637123A3561600EE08EC /* TodayManager.swift */; };
+		5374637823A35ED800EE08EC /* TodayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374637123A3561600EE08EC /* TodayManager.swift */; };
+		5374637A23A3619B00EE08EC /* TodayDueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374637923A3619B00EE08EC /* TodayDueItem.swift */; };
+		5374637B23A3619B00EE08EC /* TodayDueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374637923A3619B00EE08EC /* TodayDueItem.swift */; };
+		5374637C23A361C400EE08EC /* DueItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA892239D039E007A7D9E /* DueItem+CoreDataClass.swift */; };
+		5374637D23A361C600EE08EC /* DueItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA893239D039E007A7D9E /* DueItem+CoreDataProperties.swift */; };
 		537A6CD1239B1850004ED09E /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537A6CD0239B1850004ED09E /* FilterButton.swift */; };
 		538F717523A0E77000B8E7CC /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F717423A0E77000B8E7CC /* NavigationController.swift */; };
 		53C6406F239983C6000E9995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C6406E239983C6000E9995 /* AppDelegate.swift */; };
@@ -94,6 +101,8 @@
 		536B633323A23E7B00A427B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		536B633523A23E7B00A427B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		536B634123A2485C00A427B1 /* DueList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DueList.entitlements; sourceTree = "<group>"; };
+		5374637123A3561600EE08EC /* TodayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayManager.swift; sourceTree = "<group>"; };
+		5374637923A3619B00EE08EC /* TodayDueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDueItem.swift; sourceTree = "<group>"; };
 		537A6CD0239B1850004ED09E /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		538F717423A0E77000B8E7CC /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		53C6406B239983C6000E9995 /* DueList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DueList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53595A5623A2EDC100FB7944 /* CloudKit.framework in Frameworks */,
 				536B632E23A23E7B00A427B1 /* NotificationCenter.framework in Frameworks */,
 				0898936ABF9FFFF290C680E2 /* Pods_TodayExtension.framework in Frameworks */,
 			);
@@ -168,6 +178,7 @@
 			children = (
 				536B634123A2485C00A427B1 /* DueList.entitlements */,
 				536B633023A23E7B00A427B1 /* TodayViewController.swift */,
+				5374637923A3619B00EE08EC /* TodayDueItem.swift */,
 				536B633223A23E7B00A427B1 /* MainInterface.storyboard */,
 				536B633523A23E7B00A427B1 /* Info.plist */,
 			);
@@ -204,6 +215,7 @@
 				53F5A1EE2399BC1100931C47 /* CoreData */,
 				53F5A1E72399B81100931C47 /* DueList.entitlements */,
 				53C6406E239983C6000E9995 /* AppDelegate.swift */,
+				5374637123A3561600EE08EC /* TodayManager.swift */,
 				53C64070239983C6000E9995 /* SceneDelegate.swift */,
 				53C64072239983C6000E9995 /* RootViewController.swift */,
 				538F717423A0E77000B8E7CC /* NavigationController.swift */,
@@ -569,11 +581,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				536B634023A241C400A427B1 /* DueItems.swift in Sources */,
-				536B634323A248EC00A427B1 /* DueItem+CoreDataClass.swift in Sources */,
 				536B633D23A23F3600A427B1 /* DueList.xcdatamodeld in Sources */,
-				536B634223A248EA00A427B1 /* DueItem+CoreDataProperties.swift in Sources */,
+				53595A5923A2F09700FB7944 /* Extensions.swift in Sources */,
+				53595A5823A2F09500FB7944 /* Views.swift in Sources */,
+				5374637D23A361C600EE08EC /* DueItem+CoreDataProperties.swift in Sources */,
+				5374637823A35ED800EE08EC /* TodayManager.swift in Sources */,
+				5374637B23A3619B00EE08EC /* TodayDueItem.swift in Sources */,
+				53595A5723A2F04100FB7944 /* ETCollectionViewWaterFallLayout.swift in Sources */,
 				536B633123A23E7B00A427B1 /* TodayViewController.swift in Sources */,
+				5374637C23A361C400EE08EC /* DueItem+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,8 +608,10 @@
 				53CCA895239D039E007A7D9E /* DueItem+CoreDataProperties.swift in Sources */,
 				530FACEA239CFD300094ABDA /* DueItems.swift in Sources */,
 				53C64079239983C6000E9995 /* DueList.xcdatamodeld in Sources */,
+				5374637A23A3619B00EE08EC /* TodayDueItem.swift in Sources */,
 				53D48033239A0D62009A2039 /* Views.swift in Sources */,
 				53C64071239983C6000E9995 /* SceneDelegate.swift in Sources */,
+				5374637223A3561600EE08EC /* TodayManager.swift in Sources */,
 				535D6DD72399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

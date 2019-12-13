@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import PinLayout
 import UIColor_Hex_Swift
+import UserNotifications
 
 var appDelegate: AppDelegate {
     return UIApplication.shared.delegate as! AppDelegate
@@ -18,13 +19,19 @@ var appDelegate: AppDelegate {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    var dueItems: DueItems!
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        dueItems = DueItems(viewContext: persistentContainer.viewContext)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            print("Notifications enabled: \(granted)")
+        }
+        
+        application.registerForRemoteNotifications()
         
         return true
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        TodayManager.shared.send(message: .refresh)
     }
 
     // MARK: UISceneSession Lifecycle

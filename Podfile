@@ -13,6 +13,8 @@ target 'DueList' do
   pod 'DeepDiff'
   pod 'RxSwift', '~> 5'
   pod 'RxCocoa', '~> 5'
+  pod 'Disk'
+  pod 'MMWormhole', '~> 2.0.0'
 
   target 'DueListTests' do
     inherit! :search_paths

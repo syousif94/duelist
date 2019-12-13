@@ -11,6 +11,8 @@ import CoreData
 import SwiftDate
 import RxSwift
 import DeepDiff
+import CloudKit
+import Disk
 
 class RootViewController: UIViewController, UICollectionViewDataSource, ETCollectionViewDelegateWaterfallLayout {
     
@@ -87,16 +89,16 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
         view.addGestureRecognizer(collectionView.panGestureRecognizer)
         
         Observable.combineLatest(
-            appDelegate.dueItems.complete.results,
-            appDelegate.dueItems.incomplete.results
+            DueItems.shared.complete.results,
+            DueItems.shared.incomplete.results
         ).subscribe(onNext: { [unowned self] _, _ in
             self.updateFilters()
         }).disposed(by: bag)
         
         Observable.combineLatest(
-            appDelegate.dueItems.list,
-            appDelegate.dueItems.complete.results,
-            appDelegate.dueItems.incomplete.results
+            DueItems.shared.list,
+            DueItems.shared.complete.results,
+            DueItems.shared.incomplete.results
         ).subscribe(onNext: { [unowned self] list, complete, incomplete in
             
             let newList: [DueItem]
@@ -133,9 +135,32 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
             })
         }).disposed(by: bag)
         
-        appDelegate.dueItems.complete.results.subscribe(onNext: { [unowned self] list in
-            self.updateFilters()
+        DueItems.shared.incomplete.results.subscribe(onNext: { list in
+            TodayDueItem.saveList(of: list)
+            
+            TodayManager.shared.send(message: .reload)
+            
+            UIApplication.shared.applicationIconBadgeNumber = list.count
         }).disposed(by: bag)
+        
+        let subscription = CKQuerySubscription(recordType: "CD_DueItem",
+                                               predicate: NSPredicate(format: "CD_completed = %d", false),
+                                               options: .firesOnRecordCreation)
+        
+        let info = CKSubscription.NotificationInfo()
+        
+        subscription.notificationInfo = info
+        
+        info.shouldSendContentAvailable = true
+        
+        CKContainer(identifier: "iCloud.DueList").privateCloudDatabase.save(subscription) { subscription, error in
+            if let error = error {
+                print("error", error)
+            }
+            else {
+                print("subscription successful")
+            }
+        }
     }
     
     func updateTime() {
@@ -191,14 +216,13 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
     }
     
     func updateFilters() {
-        guard let dueItems = appDelegate.dueItems else { return }
         DispatchQueue.global(qos: .userInteractive).async { [unowned self] in
-            let all = dueItems.incomplete.results.value.count
-            let complete = dueItems.complete.results.value.count
+            let all = DueItems.shared.incomplete.results.value.count
+            let complete = DueItems.shared.complete.results.value.count
             var today = 0
             var late = 0
             
-            for object in dueItems.incomplete.results.value {
+            for object in DueItems.shared.incomplete.results.value {
                 if let date = object.dueDate?.in(region: Region.current) {
                     if date.isInPast {
                         late += 1
@@ -355,7 +379,18 @@ extension RootViewController {
             button.addSubview(dateLabel)
             button.addSubview(titleLabel)
             button.addSubview(remainingLabel)
+            
+            button.addGestureRecognizer(longPressRecognizer)
         }
+        
+        @objc func onLongTap() {
+            guard let item = item else { return }
+            DueItems.shared.delete(item: item)
+        }
+        
+        lazy var longPressRecognizer: UILongPressGestureRecognizer = {
+            return UILongPressGestureRecognizer(target: self, action: #selector(onLongTap))
+        }()
         
         override func layoutSubviews() {
             super.layoutSubviews()

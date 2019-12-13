@@ -13,30 +13,31 @@ import RxSwift
 import RxCocoa
 
 class DueItems {
+    static let shared = DueItems()
     
-    let incomplete: FetchController
+    let incomplete = FetchController(
+        viewContext: appDelegate.persistentContainer.viewContext,
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true),
+            NSSortDescriptor(keyPath: \DueItem.createdAt, ascending: false)
+        ],
+        predicate: NSPredicate(format: "completed = %d", false)
+    )
     
-    let complete: FetchController
-    
-    init(viewContext: NSManagedObjectContext) {
-        incomplete = FetchController(
-            viewContext: viewContext,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
-            ],
-            predicate: NSPredicate(format: "completed = %d", false)
-        )
-        
-        complete = FetchController(
-            viewContext: viewContext,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true)
-            ],
-            predicate: NSPredicate(format: "completed = %d", true)
-        )
-    }
+    let complete = FetchController(
+        viewContext: appDelegate.persistentContainer.viewContext,
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \DueItem.dueDate, ascending: true),
+            NSSortDescriptor(keyPath: \DueItem.createdAt, ascending: false)
+        ],
+        predicate: NSPredicate(format: "completed = %d", true)
+    )
     
     let list = BehaviorRelay<List>(value: .all)
+    
+    func delete(item: DueItem) {
+        appDelegate.persistentContainer.viewContext.delete(item)
+    }
     
     enum List {
         case all
