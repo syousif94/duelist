@@ -31,7 +31,7 @@ struct TodayDueItem: Equatable, Hashable, DiffAware, Codable {
         self.dueDate = record.value(forKey: "CD_dueDate") as? Date
         self.input = record.value(forKey: "CD_input") as? String
         self.title = record.value(forKey: "CD_title") as? String
-        self.createdAt = record.value(forKey: "CD_dueDate") as? Date
+        self.createdAt = record.value(forKey: "CD_createdAt") as? Date
     }
     
     init(from dueItem: DueItem) {
@@ -58,5 +58,43 @@ struct TodayDueItem: Equatable, Hashable, DiffAware, Codable {
         else {
             return nil
         }
+    }
+    
+    static func refreshList(_ handler: @escaping ([TodayDueItem]?) -> Void) {
+        let query = CKQuery(recordType: "CD_DueItem", predicate: NSPredicate(format: "CD_completed = %d", false))
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            CKContainer(identifier: "iCloud.DueList").privateCloudDatabase.perform(query, inZoneWith: nil) { records, error in
+                if let error = error {
+                    print("error fetching items in extension", error)
+                    
+                    handler(nil)
+                }
+                else if let records = records {
+                    let items = records.compactMap(TodayDueItem.init).sorted(by: { itemOne, itemTwo in
+                        if itemOne.dueDate == nil,
+                            itemTwo.dueDate == nil,
+                            let createdOne = itemOne.createdAt,
+                            let createdTwo = itemTwo.createdAt {
+                            return createdOne > createdTwo
+                        }
+                        else if let dueOne = itemOne.dueDate,
+                            let dueTwo = itemTwo.dueDate {
+                            return dueOne > dueTwo
+                        }
+                        else if itemOne.dueDate != nil, itemTwo.dueDate == nil {
+                            return false
+                        }
+                        else if itemOne.dueDate == nil, itemTwo.dueDate != nil {
+                            return true
+                        }
+                        return true
+                    })
+                    
+                    handler(items)
+                }
+            }
+        }
+        
     }
 }

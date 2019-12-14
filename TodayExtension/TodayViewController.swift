@@ -51,10 +51,10 @@ class TodayViewController: UIViewController, NCWidgetProviding, UICollectionView
         
         TodayManager.shared.startListening(with: { [unowned self] message in
             switch message.messageType {
-            case .refresh:
-                DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: self.refreshItems)
             case .reload:
                 self.reloadItems()
+            default:
+                break
             }
         })
     }
@@ -98,39 +98,6 @@ class TodayViewController: UIViewController, NCWidgetProviding, UICollectionView
                 self.collectionView.reload(changes: changes, updateData: {
                     self.dataSource = items
                 })
-            }
-        }
-    }
-    
-    func refreshItems() {
-        let query = CKQuery(recordType: "CD_DueItem", predicate: NSPredicate(format: "CD_completed = %d", false))
-
-        CKContainer(identifier: "iCloud.DueList").privateCloudDatabase.perform(query, inZoneWith: nil) { records, error in
-            if let error = error {
-                print("error fetching items in extension", error)
-            }
-            else if let records = records {
-                let items = records.compactMap(TodayDueItem.init).sorted(by: { itemOne, itemTwo in
-                    if let dueOne = itemOne.dueDate, let dueTwo = itemTwo.dueDate {
-                        return dueOne > dueTwo
-                    }
-                    else if itemOne.dueDate != nil, itemTwo.dueDate == nil {
-                        return false
-                    }
-                    else if let createdOne = itemOne.createdAt, let createdTwo = itemTwo.createdAt {
-                        return createdOne < createdTwo
-                    }
-                    return true
-                })
-                let changes = diff(old: self.dataSource, new: items)
-
-                DispatchQueue.main.async {
-                    self.collectionView.reload(changes: changes, updateData: {
-                        self.dataSource = items
-                    })
-                }
-
-                TodayDueItem.saveList(of: items)
             }
         }
     }

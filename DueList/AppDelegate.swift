@@ -31,7 +31,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        TodayManager.shared.send(message: .refresh)
+        
+        switch application.applicationState {
+        case .inactive, .background:
+            TodayDueItem.refreshList { items in
+                if let items = items {
+                    print(items.count)
+                    DispatchQueue.main.async {
+                        application.applicationIconBadgeNumber = items.count
+                    }
+                    TodayDueItem.saveList(of: items)
+                    TodayManager.shared.send(message: .reload)
+                    completionHandler(.newData)
+                }
+                else {
+                    completionHandler(.failed)
+                }
+            }
+        default:
+            break
+        }
+        
+        
     }
 
     // MARK: UISceneSession Lifecycle

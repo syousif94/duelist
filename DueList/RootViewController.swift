@@ -143,9 +143,20 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
             UIApplication.shared.applicationIconBadgeNumber = list.count
         }).disposed(by: bag)
         
-        let subscription = CKQuerySubscription(recordType: "CD_DueItem",
-                                               predicate: NSPredicate(format: "CD_completed = %d", false),
-                                               options: .firesOnRecordCreation)
+        subscribeToDueItemsChanges()
+    }
+    
+    func subscribeToDueItemsChanges() {
+        
+        let subscription = CKQuerySubscription(
+            recordType: "CD_DueItem",
+            predicate: NSPredicate(format: "CD_completed = %d", false),
+            options: [
+                .firesOnRecordCreation,
+                .firesOnRecordUpdate,
+                .firesOnRecordDeletion
+            ]
+        )
         
         let info = CKSubscription.NotificationInfo()
         
