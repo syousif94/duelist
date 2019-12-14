@@ -23,9 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             print("Notifications enabled: \(granted)")
+            DispatchQueue.main.async {
+                application.registerForRemoteNotifications()
+            }
         }
-        
-        application.registerForRemoteNotifications()
         
         return true
     }
@@ -34,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         switch application.applicationState {
         case .inactive, .background:
+            print("notification recieved", userInfo)
             TodayDueItem.refreshList { items in
                 if let items = items {
                     print(items.count)
