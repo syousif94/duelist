@@ -43,6 +43,7 @@ class ItemViewController: UIViewController {
         view.addSubview(itemView)
         
         for button in buttons {
+            button.delegate = self
             backgroundView.addSubview(button)
         }
         
@@ -50,9 +51,18 @@ class ItemViewController: UIViewController {
     }
     
     func layout() {
-        itemView.pin.top(SceneDelegate.shared.insets.top).left(20)
+        itemView.pin.top(SceneDelegate.shared.insets.top).left(20).size(ItemView.size(for: item, in: view.frame))
         
         layoutExceptItem()
+    }
+    
+    func toggleComplete() {
+        item.completed = !item.completed
+        try? appDelegate.persistentContainer.viewContext.save()
+        view.setNeedsLayout()
+        UIView.animate(withDuration: 0.1, animations: {
+            self.view.layoutIfNeeded()
+        })
     }
     
     func layoutExceptItem() {
@@ -124,6 +134,8 @@ extension ItemViewController {
     
     class ActionButton: UIView {
         
+        weak var delegate: ItemViewController?
+        
         static let height: CGFloat = 68
         
         let action: Action
@@ -180,13 +192,14 @@ extension ItemViewController {
         }
         
         @objc func onTap() {
+            guard let delegate = delegate else { return }
             switch action {
             case .delete:
                 break
             case .edit:
                 break
             case .complete:
-                break
+                delegate.toggleComplete()
             case .back:
                 NavigationController.shared.popViewController(animated: true)
             }

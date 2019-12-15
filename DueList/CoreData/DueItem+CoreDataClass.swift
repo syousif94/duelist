@@ -10,8 +10,17 @@
 import Foundation
 import CoreData
 import DeepDiff
+import RxSwift
 
 @objc(DueItem)
 public class DueItem: NSManagedObject, DiffAware {
 
+    lazy var observable = {
+        return Observable.combineLatest(
+            self.rx.observe(Bool.self, "completed").asObservable(),
+            self.rx.observe(String.self, "title").asObservable(),
+            self.rx.observe(Date.self, "dueDate").asObservable()
+        )
+    }()
+    
 }

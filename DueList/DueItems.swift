@@ -15,6 +15,8 @@ import RxCocoa
 class DueItems {
     static let shared = DueItems()
     
+    let bag = DisposeBag()
+    
     let incomplete = FetchController(
         viewContext: appDelegate.persistentContainer.viewContext,
         sortDescriptors: [
@@ -32,6 +34,16 @@ class DueItems {
         ],
         predicate: NSPredicate(format: "completed = %d", true)
     )
+    
+    init() {
+        incomplete.results.subscribe(onNext: { list in
+            TodayDueItem.saveList(of: list)
+            
+            TodayManager.shared.send(message: .reload)
+            
+            UIApplication.shared.applicationIconBadgeNumber = list.count
+        }).disposed(by: bag)
+    }
     
     let list = BehaviorRelay<List>(value: .all)
     

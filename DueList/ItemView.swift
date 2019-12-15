@@ -8,6 +8,8 @@
 
 import UIKit
 import SwiftDate
+import RxSwift
+import RxCocoa
 
 class ItemView: UIView {
     
@@ -27,11 +29,12 @@ class ItemView: UIView {
         let remainingheight: CGFloat
         if let timeStrings = TimeStrings(item: item) {
             dateheight = timeStrings.date.height(withConstrainedWidth: textWidth , font: font)
-            remainingheight = timeStrings.remaining.height(withConstrainedWidth: textWidth , font: subFont)
+            let remaingText = item.completed ? "Done" : timeStrings.remaining
+            remainingheight = remaingText.height(withConstrainedWidth: textWidth , font: subFont)
         }
         else {
             dateheight = 0
-            remainingheight = 0
+            remainingheight = item.completed ? "Done".height(withConstrainedWidth: textWidth , font: subFont) : 0
         }
         
         let titleheight = item.title?.height(withConstrainedWidth: textWidth , font: font) ?? 0
@@ -66,20 +69,40 @@ class ItemView: UIView {
         }
     }
     
+    var bag = DisposeBag()
+    
     var item: DueItem? {
+        willSet {
+            bag = DisposeBag()
+        }
         didSet {
             guard let item = item else { return }
-            configure(for: item)
+            
+            item.observable.subscribe(onNext: { [unowned self] _, _, _ in
+                self.configure(for: item)
+            }).disposed(by: bag)
         }
     }
     
     func configure(for item: DueItem) {
         if let timeStrings = TimeStrings(item: item) {
             dateLabel.text = timeStrings.date
-            remainingLabel.text = timeStrings.remaining
-            remainingLabel.textColor = timeStrings.pastDue ? .red : UIColor("#666")
+            if item.completed {
+                remainingLabel.text = "Done"
+                remainingLabel.textColor = .green
+            }
+            else {
+                remainingLabel.text = timeStrings.remaining
+                remainingLabel.textColor = timeStrings.pastDue ? .red : UIColor("#666")
+            }
             dateLabel.isHidden = false
             remainingLabel.isHidden = false
+        }
+        else if item.completed {
+            remainingLabel.text = "Done"
+            remainingLabel.textColor = .green
+            remainingLabel.isHidden = false
+            dateLabel.isHidden = true
         }
         else {
             dateLabel.isHidden = true

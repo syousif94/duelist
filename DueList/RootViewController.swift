@@ -91,6 +91,8 @@ class RootViewController: UIViewController,
         
         view.addGestureRecognizer(collectionView.panGestureRecognizer)
         
+        observeList()
+        
         Observable.combineLatest(
             DueItems.shared.complete.results,
             DueItems.shared.incomplete.results
@@ -98,7 +100,26 @@ class RootViewController: UIViewController,
             self.updateFilters()
         }).disposed(by: bag)
         
-        Observable.combineLatest(
+        subscribeToDueItemsChanges()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        observeList()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        listSubscription?.dispose()
+        listSubscription = nil
+    }
+    
+    var listSubscription: Disposable?
+    
+    func observeList() {
+        guard listSubscription == nil else { return }
+        
+        listSubscription = Observable.combineLatest(
             DueItems.shared.list,
             DueItems.shared.complete.results,
             DueItems.shared.incomplete.results
@@ -136,17 +157,7 @@ class RootViewController: UIViewController,
             self.collectionView.reload(changes: changes, updateData: {
                 self.dataSource = newList
             })
-        }).disposed(by: bag)
-        
-        DueItems.shared.incomplete.results.subscribe(onNext: { list in
-            TodayDueItem.saveList(of: list)
-            
-            TodayManager.shared.send(message: .reload)
-            
-            UIApplication.shared.applicationIconBadgeNumber = list.count
-        }).disposed(by: bag)
-        
-        subscribeToDueItemsChanges()
+        })
     }
     
     func subscribeToDueItemsChanges() {
@@ -332,10 +343,19 @@ extension RootViewController {
         
         weak var delegate: RootViewController?
         
+        var bag = DisposeBag()
+        
         var item: DueItem? {
+            willSet {
+                bag = DisposeBag()
+            }
             didSet {
                 guard let item = item else { return }
                 configure(for: item)
+                
+                item.observable.subscribe(onNext: { [unowned self] _, _, _ in
+                    self.delegate?.collectionView.collectionViewLayout.invalidateLayout()
+                }).disposed(by: bag)
             }
         }
         
