@@ -110,16 +110,7 @@ class FilterButton: FadingButton {
         label.pin.left(10).bottom(5).sizeToFit()
         countLabel.pin.right(10).top(5).sizeToFit()
         iconBackgroundView.pin.left(6).vCenter(to: countLabel.edge.vCenter).marginBottom(1)
-        switch mode {
-        case .all:
-            iconView.pin.hCenter().vCenter()
-        case .today:
-            iconView.pin.hCenter().vCenter()
-        case .late:
-            iconView.pin.hCenter().vCenter()
-        case .done:
-            iconView.pin.hCenter().vCenter()
-        }
+        iconView.pin.center()
     }
     
     required init?(coder: NSCoder) {

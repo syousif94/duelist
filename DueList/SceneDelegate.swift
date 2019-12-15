@@ -17,8 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var insets: UIEdgeInsets! {
         return window!.safeAreaInsets
     }
-    
-    let rootViewController = RootViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -31,11 +29,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
         viewContext.automaticallyMergesChangesFromParent = true
-
-        rootViewController.managedObjectContext = viewContext
+        
+        NavigationController.shared.rootViewController.managedObjectContext = viewContext
         
         let window = UIWindow(windowScene: scene)
-        window.rootViewController = rootViewController
+        window.rootViewController = NavigationController.shared
         self.window = window
         window.makeKeyAndVisible()
     }

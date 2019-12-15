@@ -9,5 +9,17 @@
 import UIKit
 
 class NavigationController: UINavigationController {
+    static let shared = NavigationController()
     
+    let rootViewController = RootViewController()
+    
+    init() {
+        super.init(rootViewController: rootViewController)
+        view.backgroundColor = UIColor.white
+        setNavigationBarHidden(true, animated: false)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

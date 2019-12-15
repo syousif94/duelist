@@ -14,7 +14,10 @@ import DeepDiff
 import CloudKit
 import Disk
 
-class RootViewController: UIViewController, UICollectionViewDataSource, ETCollectionViewDelegateWaterfallLayout {
+class RootViewController: UIViewController,
+    UICollectionViewDataSource,
+    ETCollectionViewDelegateWaterfallLayout,
+    UINavigationControllerDelegate {
     
     var managedObjectContext: NSManagedObjectContext!
     
@@ -180,6 +183,8 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
         dateLabel.text = dateString
     }
     
+    // MARK: Layout
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -253,6 +258,8 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
         }
     }
     
+    // MARK: UICollectionView
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -260,11 +267,12 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: Cell = collectionView.dequeueReusableCell(for: indexPath)
         cell.item = dataSource[indexPath.item]
+        cell.delegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return Cell.size(for: dataSource[indexPath.item])
+        return Cell.size(for: dataSource[indexPath.item], in: collectionView.frame)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -272,61 +280,57 @@ class RootViewController: UIViewController, UICollectionViewDataSource, ETCollec
             headerView.transform = CGAffineTransform(translationX: 0, y: -scrollView.contentOffset.y)
         }
     }
+    
+    // MARK: Navigation
+    
+    var itemInteractor: ItemInteractor?
+    
+    weak var selectedCell: Cell?
+    
+    func presentItemView(sender: Cell) {
+        guard let item = sender.item else { return }
+        self.selectedCell = sender
+        let frame = collectionView.convert(sender.frame, to: view)
+        NavigationController.shared.delegate = self
+        let viewController = ItemViewController(item: item, originFrame: frame)
+        NavigationController.shared.pushViewController(viewController, animated: true)
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        guard let cell = selectedCell else { return nil }
+        
+        let frame = collectionView.convert(cell.frame, to: view)
+        
+        switch operation {
+        case .push:
+            self.itemInteractor = ItemInteractor(viewController: toVC)
+            return ItemAnimator(isPresenting: true, originFrame: frame, cell: cell)
+        case .pop:
+            return ItemAnimator(isPresenting: false, originFrame: frame, cell: cell)
+        default:
+            return nil
+        }
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        guard let interactor = itemInteractor, interactor.transitionInProgress else { return nil }
+        
+        return interactor
+    }
 }
 
 extension RootViewController {
+    
+    // MARK: Cell
+    
     class Cell: UICollectionViewCell, ReusableView {
         
-        static let font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        
-        static let subFont = UIFont.systemFont(ofSize: 12, weight: .semibold)
-        
-        static func size(for item: DueItem) -> CGSize {
-            let width = (UIScreen.main.bounds.width - 60) / 3
-            let textWidth = width - 20
-            
-            let dateheight: CGFloat
-            let remainingheight: CGFloat
-            if let timeStrings = TimeStrings(item: item) {
-                dateheight = timeStrings.date.height(withConstrainedWidth: textWidth , font: font)
-                remainingheight = timeStrings.remaining.height(withConstrainedWidth: textWidth , font: subFont)
-            }
-            else {
-                dateheight = 0
-                remainingheight = 0
-            }
-            
-            let titleheight = item.title?.height(withConstrainedWidth: textWidth , font: font) ?? 0
-            
-            let height = 7 + dateheight + titleheight + remainingheight + 7
-            return CGSize(width: width, height: max(height, 44))
+        static func size(for item: DueItem, in frame: CGRect) -> CGSize {
+            return ItemView.size(for: item, in: frame)
         }
         
-        struct TimeStrings {
-            let date: String
-            let remaining: String
-            let pastDue: Bool
-            
-            init?(item: DueItem) {
-                guard let date = item.dueDate?.in(region: Region.current) else { return nil }
-                
-                self.date = "\(date.toFormat("MMM d"))\n\(date.toFormat("h:mm"))\(date.toFormat("a").lowercased())"
-                
-                self.pastDue = date.isInPast
-                
-                let relative = date.toRelative(style: RelativeFormatter.twitterStyle(), locale: Locales.english)
-                
-                var suffix = ""
-                if !pastDue {
-                    suffix = " left"
-                }
-                else if relative != "now" {
-                    suffix = " ago"
-                }
-                
-                self.remaining = "\(relative)\(suffix)"
-            }
-        }
+        weak var delegate: RootViewController?
         
         var item: DueItem? {
             didSet {
@@ -336,62 +340,33 @@ extension RootViewController {
         }
         
         func configure(for item: DueItem) {
-            if let timeStrings = TimeStrings(item: item) {
-                dateLabel.text = timeStrings.date
-                remainingLabel.text = timeStrings.remaining
-                remainingLabel.textColor = timeStrings.pastDue ? .red : UIColor("#666")
-                dateLabel.isHidden = false
-                remainingLabel.isHidden = false
-            }
-            else {
-                dateLabel.isHidden = true
-                remainingLabel.isHidden = true
-            }
-            
-            titleLabel.text = item.title
-            
-            setNeedsLayout()
+            itemView.item = item
         }
         
         let button = FadingButton()
         
-        let dateLabel: UILabel = {
-            let label = UILabel()
-            label.font = Cell.font
-            label.textColor = UIColor("#666")
-            label.numberOfLines = 0
-            return label
-        }()
-        
-        let titleLabel: UILabel = {
-            let label = UILabel()
-            label.font = Cell.font
-            label.textColor = .black
-            label.numberOfLines = 0
-            return label
-        }()
-        
-        let remainingLabel: UILabel = {
-            let label = UILabel()
-            label.font = Cell.subFont
-            label.textColor = UIColor("#666")
-            return label
-        }()
+        let itemView = ItemView()
         
         override init(frame: CGRect) {
             super.init(frame: frame)
             
-            backgroundColor = UIColor("#f5f5f5")
+            backgroundColor = ItemView.backgroundColor
             
-            layer.cornerRadius = 8
+            layer.cornerRadius = ItemView.radius
             
             contentView.addSubview(button)
             
-            button.addSubview(dateLabel)
-            button.addSubview(titleLabel)
-            button.addSubview(remainingLabel)
+            button.addSubview(itemView)
+            
+            itemView.isUserInteractionEnabled = false
             
             button.addGestureRecognizer(longPressRecognizer)
+            
+            button.addTarget(self, action: #selector(onTap), for: .touchUpInside)
+        }
+        
+        @objc func onTap() {
+            delegate?.presentItemView(sender: self)
         }
         
         @objc func onLongTap() {
@@ -403,23 +378,14 @@ extension RootViewController {
             return UILongPressGestureRecognizer(target: self, action: #selector(onLongTap))
         }()
         
+        // MARK: Cell Layout
+        
         override func layoutSubviews() {
             super.layoutSubviews()
             
             button.pin.all()
             
-            dateLabel.pin.top(7).horizontally(10).sizeToFit(.width)
-            
-            titleLabel.pin.horizontally(10).sizeToFit(.width)
-            
-            if dateLabel.isHidden {
-                titleLabel.pin.top(7)
-            }
-            else {
-                titleLabel.pin.below(of: dateLabel)
-            }
-            
-            remainingLabel.pin.horizontally(10).sizeToFit(.width).below(of: titleLabel)
+            itemView.pin.all()
         }
         
         required init?(coder: NSCoder) {

@@ -59,6 +59,8 @@ class InputViewController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
+    let accessoryView = AccessoryView()
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
@@ -110,6 +112,7 @@ class InputViewController: UIViewController, UITextFieldDelegate {
         
         textField.leftView = leftView
         textField.leftViewMode = .always
+        textField.inputAccessoryView = accessoryView
         
         view.addSubview(textField)
         
@@ -159,4 +162,24 @@ class InputViewController: UIViewController, UITextFieldDelegate {
         textField.pin.bottom().horizontally().height(InputViewController.inputHeight)
     }
     
+}
+
+extension InputViewController {
+    class AccessoryView: UIInputView {
+        
+        init() {
+            super.init(frame: .zero, inputViewStyle: .keyboard)
+            frame.size.height = 44
+            frame.size.width = UIScreen.main.bounds.width
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+    }
+    
+    class AccessoryButton: FadingButton {
+        
+    }
 }

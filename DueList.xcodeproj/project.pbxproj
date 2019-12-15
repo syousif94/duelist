@@ -42,6 +42,10 @@
 		53CCA895239D039E007A7D9E /* DueItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA893239D039E007A7D9E /* DueItem+CoreDataProperties.swift */; };
 		53D48033239A0D62009A2039 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D48032239A0D62009A2039 /* Views.swift */; };
 		53D48035239A0DD1009A2039 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D48034239A0DD1009A2039 /* Extensions.swift */; };
+		53D64CF823A5E3AF00FCB457 /* ItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D64CF723A5E3AF00FCB457 /* ItemViewController.swift */; };
+		53D64CFA23A5E64D00FCB457 /* ItemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D64CF923A5E64D00FCB457 /* ItemInteractor.swift */; };
+		53D64CFC23A5E65B00FCB457 /* ItemAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D64CFB23A5E65B00FCB457 /* ItemAnimator.swift */; };
+		53D64CFE23A6116D00FCB457 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D64CFD23A6116D00FCB457 /* ItemView.swift */; };
 		53F5A1E92399B87800931C47 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F5A1E82399B87800931C47 /* CloudKit.framework */; };
 		B7C9843F8C7A804080E5A385 /* Pods_DueListTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 618C990FB62C1BA7CB3D71EC /* Pods_DueListTests.framework */; };
 		D7025AEA15045BC1961AD85D /* Pods_DueList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7691D68D4736B92644D1FD24 /* Pods_DueList.framework */; };
@@ -123,6 +127,10 @@
 		53CCA893239D039E007A7D9E /* DueItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DueItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		53D48032239A0D62009A2039 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		53D48034239A0DD1009A2039 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		53D64CF723A5E3AF00FCB457 /* ItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewController.swift; sourceTree = "<group>"; };
+		53D64CF923A5E64D00FCB457 /* ItemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemInteractor.swift; sourceTree = "<group>"; };
+		53D64CFB23A5E65B00FCB457 /* ItemAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemAnimator.swift; sourceTree = "<group>"; };
+		53D64CFD23A6116D00FCB457 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		53F5A1E72399B81100931C47 /* DueList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DueList.entitlements; sourceTree = "<group>"; };
 		53F5A1E82399B87800931C47 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		57DED58E43F2A314FB07065C /* Pods_DueList_DueListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DueList_DueListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -218,6 +226,10 @@
 				5374637123A3561600EE08EC /* TodayManager.swift */,
 				53C64070239983C6000E9995 /* SceneDelegate.swift */,
 				53C64072239983C6000E9995 /* RootViewController.swift */,
+				53D64CFD23A6116D00FCB457 /* ItemView.swift */,
+				53D64CF923A5E64D00FCB457 /* ItemInteractor.swift */,
+				53D64CFB23A5E65B00FCB457 /* ItemAnimator.swift */,
+				53D64CF723A5E3AF00FCB457 /* ItemViewController.swift */,
 				538F717423A0E77000B8E7CC /* NavigationController.swift */,
 				530FACE9239CFD300094ABDA /* DueItems.swift */,
 				535D6DD22399C983008DC139 /* InputViewController.swift */,
@@ -601,16 +613,20 @@
 				53CCA894239D039E007A7D9E /* DueItem+CoreDataClass.swift in Sources */,
 				537A6CD1239B1850004ED09E /* FilterButton.swift in Sources */,
 				53218C29239F58B700CF4191 /* InputParser.swift in Sources */,
+				53D64CFE23A6116D00FCB457 /* ItemView.swift in Sources */,
 				53D48035239A0DD1009A2039 /* Extensions.swift in Sources */,
+				53D64CFC23A5E65B00FCB457 /* ItemAnimator.swift in Sources */,
 				538F717523A0E77000B8E7CC /* NavigationController.swift in Sources */,
 				535D6DD32399C983008DC139 /* InputViewController.swift in Sources */,
 				53C6406F239983C6000E9995 /* AppDelegate.swift in Sources */,
 				53CCA895239D039E007A7D9E /* DueItem+CoreDataProperties.swift in Sources */,
+				53D64CFA23A5E64D00FCB457 /* ItemInteractor.swift in Sources */,
 				530FACEA239CFD300094ABDA /* DueItems.swift in Sources */,
 				53C64079239983C6000E9995 /* DueList.xcdatamodeld in Sources */,
 				5374637A23A3619B00EE08EC /* TodayDueItem.swift in Sources */,
 				53D48033239A0D62009A2039 /* Views.swift in Sources */,
 				53C64071239983C6000E9995 /* SceneDelegate.swift in Sources */,
+				53D64CF823A5E3AF00FCB457 /* ItemViewController.swift in Sources */,
 				5374637223A3561600EE08EC /* TodayManager.swift in Sources */,
 				535D6DD72399F89D008DC139 /* ETCollectionViewWaterFallLayout.swift in Sources */,
 			);
